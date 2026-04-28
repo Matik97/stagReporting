@@ -29,14 +29,15 @@ public class ThesisDurationReporting {
 
             if (list != null && list.kvalifikacniPrace != null) {
                 for (KvalifikacniPrace prace : list.kvalifikacniPrace) {
-                    if (prace.datumZadani != null && prace.datumObhajoby != null
-                            && prace.datumZadani.value != null && prace.datumObhajoby.value != null) {
+                    // TADY se teď ptáme na datumOdevzdani
+                    if (prace.datumZadani != null && prace.datumOdevzdani != null
+                            && prace.datumZadani.value != null && prace.datumOdevzdani.value != null) {
                         try {
                             String d1 = prace.datumZadani.value.trim().split(" ")[0];
-                            String d2 = prace.datumObhajoby.value.trim().split(" ")[0];
+                            String d2 = prace.datumOdevzdani.value.trim().split(" ")[0]; // I TADY
                             LocalDate zadani = LocalDate.parse(d1, formatter);
-                            LocalDate obhajoba = LocalDate.parse(d2, formatter);
-                            totalDays += ChronoUnit.DAYS.between(zadani, obhajoba);
+                            LocalDate odevzdani = LocalDate.parse(d2, formatter); // I TADY
+                            totalDays += ChronoUnit.DAYS.between(zadani, odevzdani); // I TADY
                             count++;
                         } catch (Exception ignored) {
                         }
@@ -44,7 +45,7 @@ public class ThesisDurationReporting {
                 }
             }
 
-            long average = count > 0 ? totalDays / count : 0;
+            long average = count > 0 ? Math.round((double) totalDays / count) : 0;
             result.add(new ThesisDuration(rok, average));
         }
 

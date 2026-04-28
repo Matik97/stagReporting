@@ -16,7 +16,7 @@ public class ThesisDurationReportingTest
     void test01() throws IOException, JSONException {
         var actual = ThesisDurationReporting.GetReport(new TestDataSource(),  "KIKM",new String[]{"2022","2023","2024","2025"});
         var actualJson = new Gson().toJson(actual);
-        var expectedJson = ResourcesUtils.readResourceFile("expectedReports/thesisDuraitons_2022-2023-2024-2025_KIKM.json");
+        var expectedJson = ResourcesUtils.readResourceFile("expectedReports/thesisDurations_2022-2023-2024-2025_KIKM.json");
         JSONAssert.assertEquals(
                 expectedJson,
                 actualJson,
