@@ -2,48 +2,56 @@ package pro1.reports.report4;
 
 import com.google.gson.Gson;
 import pro1.DataSource;
+import pro1.apiDataModel.KvalifikacniPrace;
+import pro1.apiDataModel.KvalifikacniPraceList;
 import pro1.reports.report4.reportDataModel.ThesisDuration;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ThesisDurationReporting {
 
-    private static class QualWork {
-        public String datumZadani;
-        public String datumObhajoby;
-    }
-
-    private static class QualWorkList {
-        public QualWork[] kvalifikacniPrace;
-    }
-
-    public static ThesisDuration[] GetReport(DataSource dataSource, String katedra, String[] roky) {
-        ThesisDuration[] results = new ThesisDuration[roky.length];
+    public static List<ThesisDuration> GetReport(DataSource dataSource, String katedra, List<String> roky) {
+        List<ThesisDuration> result = new ArrayList<>();
+        Gson gson = new Gson();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy");
 
-        for (int i = 0; i < roky.length; i++) {
-            String rok = roky[i];
+        for (String rok : roky) {
             String json = dataSource.getKvalifikacniPrace(rok, katedra);
-            QualWorkList list = new Gson().fromJson(json, QualWorkList.class);
+            KvalifikacniPraceList list = gson.fromJson(json, KvalifikacniPraceList.class);
 
-            long sumDelka = 0;
+            long totalDays = 0;
             int count = 0;
 
             if (list != null && list.kvalifikacniPrace != null) {
-                for (QualWork prace : list.kvalifikacniPrace) {
-                    if (prace.datumZadani != null && prace.datumObhajoby != null) {
+                for (KvalifikacniPrace prace : list.kvalifikacniPrace) {
+                    if (prace.datumZadani != null && prace.datumObhajoby != null
+                            && prace.datumZadani.value != null && prace.datumObhajoby.value != null) {
                         try {
-                            LocalDate zadani = LocalDate.parse(prace.datumZadani, formatter);
-                            LocalDate obhajoba = LocalDate.parse(prace.datumObhajoby, formatter);
-                            sumDelka += ChronoUnit.DAYS.between(zadani, obhajoba);
+                            String d1 = prace.datumZadani.value.trim().split(" ")[0];
+                            String d2 = prace.datumObhajoby.value.trim().split(" ")[0];
+                            LocalDate zadani = LocalDate.parse(d1, formatter);
+                            LocalDate obhajoba = LocalDate.parse(d2, formatter);
+                            totalDays += ChronoUnit.DAYS.between(zadani, obhajoba);
                             count++;
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
             }
-            results[i] = new ThesisDuration(rok, count > 0 ? Math.round((double) sumDelka / count) : 0);
+
+            long average = count > 0 ? totalDays / count : 0;
+            result.add(new ThesisDuration(rok, average));
         }
-        return results;
+
+        return result;
+    }
+
+    public static List<ThesisDuration> GetReport(DataSource dataSource, String katedra, String[] roky) {
+        return GetReport(dataSource, katedra, Arrays.asList(roky));
     }
 }

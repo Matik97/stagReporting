@@ -20,7 +20,7 @@ public class DepartmentWeekdaysReporting {
 
             if (actionsList != null && actionsList.items != null) {
                 for (Action akce : actionsList.items) {
-                    if (pozadovanyDen.equals(akce.den)) {
+                    if (akce.den != null && pozadovanyDen.equals(akce.den.trim())) {
                         pocet++;
                     }
                 }
