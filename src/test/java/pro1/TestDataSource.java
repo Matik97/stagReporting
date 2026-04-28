@@ -5,11 +5,13 @@ import java.nio.file.Files;
 
 public class TestDataSource implements DataSource {
     @Override
+
     public String getRozvrhByKatedra(String rok, String katedra) {
         return ResourcesUtils.readResourceFile(
                 String.format("testData/getRozvrhByKatedra_%s_%s.json",rok,katedra));
 
     }
+
     public String getTerminyZkousek2(String katedra) {
         return ResourcesUtils.readResourceFile(
                 String.format("testData/getTerminyZkousek_%s.json",katedra));
