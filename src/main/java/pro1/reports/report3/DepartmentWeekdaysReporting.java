@@ -18,8 +18,8 @@ public class DepartmentWeekdaysReporting {
             String pozadovanyDen = days[i];
             long pocet = 0;
 
-            if (actionsList != null && actionsList.rozvrhovaAkce != null) {
-                for (Action akce : actionsList.rozvrhovaAkce) {
+            if (actionsList != null && actionsList.items != null) {
+                for (Action akce : actionsList.items) {
                     if (pozadovanyDen.equals(akce.den)) {
                         pocet++;
                     }

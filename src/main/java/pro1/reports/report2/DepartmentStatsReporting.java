@@ -24,8 +24,8 @@ public class DepartmentStatsReporting {
 
     private static long maxActionStudentsCount(ActionsList actionsList) {
         long max = 0;
-        if (actionsList != null && actionsList.rozvrhovaAkce != null) {
-            for (Action akce : actionsList.rozvrhovaAkce) {
+        if (actionsList != null && actionsList.items != null) {
+            for (Action akce : actionsList.items) {
                 long pocetStudentu = parseLongSafely(akce.obsazeni);
                 if (pocetStudentu > max) {
                     max = pocetStudentu;
@@ -37,8 +37,8 @@ public class DepartmentStatsReporting {
 
     private static long emptyActionsCount(ActionsList actionsList) {
         long count = 0;
-        if (actionsList != null && actionsList.rozvrhovaAkce != null) {
-            for (Action akce : actionsList.rozvrhovaAkce) {
+        if (actionsList != null && actionsList.items != null) {
+            for (Action akce : actionsList.items) {
                 if (akce.obsazeni == null || akce.obsazeni.trim().isEmpty() || parseLongSafely(akce.obsazeni) == 0) {
                     count++;
                 }
@@ -49,9 +49,9 @@ public class DepartmentStatsReporting {
 
     private static long maxTeacherScore(ActionsList actionsList) {
         long maxScore = 0;
-        if (actionsList != null && actionsList.rozvrhovaAkce != null) {
+        if (actionsList != null && actionsList.items != null) {
             Set<Long> teacherIds = new HashSet<>();
-            for (Action akce : actionsList.rozvrhovaAkce) {
+            for (Action akce : actionsList.items) {
                 if (akce.ucitIdno != null && !akce.ucitIdno.trim().isEmpty()) {
                     String[] ucitele = akce.ucitIdno.split(",");
                     for (String id : ucitele) {
@@ -74,8 +74,8 @@ public class DepartmentStatsReporting {
 
     private static long teacherScore(long teacherId, ActionsList actionsList) {
         long sum = 0;
-        if (actionsList != null && actionsList.rozvrhovaAkce != null) {
-            for (Action akce : actionsList.rozvrhovaAkce) {
+        if (actionsList != null && actionsList.items != null) {
+            for (Action akce : actionsList.items) {
                 if (akce.ucitIdno != null) {
                     String[] ucitele = akce.ucitIdno.split(",");
                     for (String id : ucitele) {

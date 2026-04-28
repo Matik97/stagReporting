@@ -6,7 +6,6 @@ import java.util.List;
 
 public class ActionsList
 {
-    public Action[] rozvrhovaAkce;
     @SerializedName("rozvrhovaAkce")
     public List<Action> items;
 }
